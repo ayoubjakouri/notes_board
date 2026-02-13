@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import Trash from "./icons/Trash";
-import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils.js";
-import type { Note, Position, Colors } from "../types.js";
-import { updateNote } from "../api.js";
+import Spinner from "./icons/Spinner";
+import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
+import type { Note, Position, Colors } from "../types";
+import { updateNote } from "../api";
 
 type NoteCardProps = {
   note: Note;
@@ -14,11 +15,25 @@ function NoteCard({ note }: NoteCardProps) {
   const body = bodyParser(note.body);
 
   const [position, setPositon] = useState<Position>(JSON.parse(note.position));
+  const [saving, setSaving] = useState(false);
 
   const mouseStartPos = { x: 0, y: 0 };
 
   const cardRef = useRef<HTMLDivElement | null>(null);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const keyUpTimer = useRef<number>(null);
+
+  async function handleKeyUp() {
+    setSaving(true);
+
+    if (keyUpTimer.current) {
+      clearTimeout(keyUpTimer.current);
+    }
+
+    keyUpTimer.current = setTimeout(() => {
+      saveData("body", textAreaRef.current?.value || "");
+    }, 2000);
+  }
 
   function mouseMove(e: MouseEvent) {
     //1 - Calculate move direction
@@ -58,6 +73,7 @@ function NoteCard({ note }: NoteCardProps) {
   async function saveData(key: string, value: Colors | Position | string) {
     const payload = { [key]: JSON.stringify(value) };
     await updateNote(note._id, payload);
+    setSaving(false);
   }
 
   useEffect(() => {
@@ -80,12 +96,19 @@ function NoteCard({ note }: NoteCardProps) {
         onMouseDown={mouseDown}
       >
         <Trash />
+        {saving && (
+          <div className="card-saving">
+            <Spinner color={colors.colorText} />
+            <span style={{ color: colors.colorText }}>Saving...</span>
+          </div>
+        )}
       </div>
       <div className="card-body">
         <textarea
           ref={textAreaRef}
           style={{ color: colors.colorText }}
           defaultValue={body}
+          onKeyUp={handleKeyUp}
           onInput={() => {
             autoGrow(textAreaRef);
           }}
