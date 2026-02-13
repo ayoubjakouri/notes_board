@@ -5,15 +5,17 @@ import Spinner from "./icons/Spinner";
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
 import type { Note, Position, Colors } from "../types";
 import { updateNote } from "../api";
+import useNotesContext from "../hooks/useNotesContext";
 
 type NoteCardProps = {
   note: Note;
-  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
 };
 
-function NoteCard({ note, setNotes }: NoteCardProps) {
+function NoteCard({ note }: NoteCardProps) {
   const colors: Colors = JSON.parse(note.colors);
   const body = bodyParser(note.body);
+
+  const { setNotes } = useNotesContext();
 
   const [position, setPositon] = useState<Position>(JSON.parse(note.position));
   const [saving, setSaving] = useState(false);

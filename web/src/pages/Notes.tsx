@@ -1,24 +1,13 @@
-import { useState, useEffect } from "react";
-import type { Note } from "../types";
 import NoteCard from "../components/NoteCard";
-import { getAllNotes } from "../api";
+import useNotesContext from "../hooks/useNotesContext";
 
 function Notes() {
-  const [notes, setNotes] = useState<Note[]>([]);
-
-  async function init() {
-    const data = await getAllNotes();
-    setNotes(data);
-  }
-
-  useEffect(() => {
-    init();
-  }, []);
+  const { notes } = useNotesContext();
 
   return (
     <div>
       {notes.map((note) => (
-        <NoteCard note={note} setNotes={setNotes} key={note._id} />
+        <NoteCard note={note} key={note._id} />
       ))}
     </div>
   );
