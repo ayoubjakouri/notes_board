@@ -20,3 +20,25 @@ export async function getAllNotes(): Promise<Note[]> {
     return [];
   }
 }
+
+export async function updateNote(id: string, payload: any) {
+  try {
+    const response = await fetch(`${API_URL}/notes/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      console.error("updateNote: server error");
+      return;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    } else {
+      console.log("Unknown error", error);
+    }
+  }
+}

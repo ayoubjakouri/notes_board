@@ -3,6 +3,7 @@ import type { MouseEvent as ReactMouseEvent } from "react";
 import Trash from "./icons/Trash";
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils.js";
 import type { Note, Position, Colors } from "../types.js";
+import { updateNote } from "../api.js";
 
 type NoteCardProps = {
   note: Note;
@@ -48,6 +49,15 @@ function NoteCard({ note }: NoteCardProps) {
   function mouseUp() {
     document.removeEventListener("mousemove", mouseMove);
     document.removeEventListener("mouseup", mouseUp);
+
+    if (!cardRef.current) return;
+    const newPosition = setNewOffset(cardRef.current);
+    saveData("position", newPosition);
+  }
+
+  async function saveData(key: string, value: Colors | Position | string) {
+    const payload = { [key]: JSON.stringify(value) };
+    await updateNote(note._id, payload);
   }
 
   useEffect(() => {
@@ -86,7 +96,6 @@ function NoteCard({ note }: NoteCardProps) {
       </div>
     </div>
   );
-  re;
 }
 
 export default NoteCard;
