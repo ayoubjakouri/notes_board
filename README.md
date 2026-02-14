@@ -26,26 +26,9 @@ This project allows users to create, update, delete, and manage notes through a 
 
 ---
 
-## 📦 Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-username/notes-board.git
-cd notes-board
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
----
-
 ## ⚙️ Environment Setup
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory after you clone the repo and cd into it:
 
 ```bash
 cp .env.example .env
@@ -63,26 +46,29 @@ Make sure your MongoDB server is running before starting the application.
 
 ---
 
-## ▶️ Run the Server
+## 📦 Installation
 
-Development mode:
+Clone the repository:
 
 ```bash
+git clone https://github.com/your-username/notes-board.git
+cd notes-board
+```
+
+Install backend dependencies and then run the api:
+
+```bash
+npm install
 npm run dev
 ```
 
-Production mode:
+Install frontend dependencies and then run the vite developement server:
 
 ```bash
-npm start
+cd web
+npm install
+npm run dev
 ```
-
-The server will start at:
-
-```
-http://localhost:3005
-```
-
 ---
 
 ## 📁 Project Structure
@@ -95,6 +81,7 @@ notes-board/
 ├── routes/
 ├── middleware/
 ├── config/
+├── web/ <--- the frontend app written in react
 │
 ├── .env
 ├── .env.example
@@ -134,5 +121,3 @@ Pull requests are welcome.
 For major changes, please open an issue first to discuss what you would like to change.
 
 Please ensure tests are updated as appropriate.
-
-
